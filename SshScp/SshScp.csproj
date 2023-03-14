@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>SshScp</AssemblyName>
+    <RootNamespace>SshScp</RootNamespace>
+    <Version>0.0.1</Version>
+    <LangVersion>latest</LangVersion>
+    <RepositoryUrl>https://github.com/aliasadidev/ssh-scp</RepositoryUrl>
+    <PackageDescription>Download files through ssh with SCP</PackageDescription>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DevTunnels.Ssh" Version="3.10.29" />
+  </ItemGroup>
+
+</Project>
