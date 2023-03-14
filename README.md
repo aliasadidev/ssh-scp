@@ -1,5 +1,7 @@
 # ssh-scp
 Provides SCP functionality
+- **Download files feature (finished)**
+- Upload files feature (under development)
 
 Follow this project: [Sample-Project](https://github.com/aliasadidev/ssh-scp/tree/main/sample/SshScp.Sample)
 
