@@ -1,7 +1,12 @@
 # ssh-scp
 Provides SCP functionality
-- **Download files feature**
-- **Upload files feature**
+
+# features
+- **Download a file**
+- **Upload a file**
+- **Get list of dirs**
+- **Get list of files**
+- **Check a file is exist**
 
 Follow this project: [Sample-Project](https://github.com/aliasadidev/ssh-scp/tree/main/sample/SshScp.Sample)
 
