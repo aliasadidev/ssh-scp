@@ -10,6 +10,7 @@ public interface ISshService
   Task<List<string>> ListFilesInDirectory(string dir, OperatingSystems os);
   Task<List<string>> ListDirectories(string dir, OperatingSystems os);
   Task<byte[]> DownloadFile(string filePath, OperatingSystems os);
+  Task UploadFile(Stream content, string fileName, string targetPath, OperatingSystems os);
 }
 
 public class SshService : ISshService
@@ -86,5 +87,15 @@ public class SshService : ISshService
     await _scpClient.Download(channel, filePath, mem);
     await _sshClientSession.CloseSession(session);
     return mem.ToArray();
+  }
+
+  public async Task UploadFile(Stream content, string fileName, string targetPath, OperatingSystems os)
+  {
+    using var mem = new MemoryStream();
+    using var session = await _sshClientSession.GetSession();
+    SshChannel channel = await session.OpenChannelAsync();
+    //var path = os == OperatingSystems.win32 ? filePath.Replace("/", @"\") : filePath;
+    await _scpClient.Upload(channel, content, targetPath, fileName);
+    await _sshClientSession.CloseSession(session);
   }
 }

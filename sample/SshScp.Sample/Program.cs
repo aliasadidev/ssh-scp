@@ -54,3 +54,8 @@ byte[] byteArray = await sshService.DownloadFile("/home/ali/github/csharp-refact
 File.WriteAllBytes("icon.png", byteArray);
 
 
+System.Console.WriteLine("------------------------- Upload a file -----------------------");
+
+FileStream fileStream = new FileStream("/home/ali/github/csharp-refactor/images/icon.png", FileMode.Open, FileAccess.Read);
+await sshService.UploadFile(fileStream, "new.png", "/home/ali/github/ssh-scp/", OperatingSystems.linux);
+

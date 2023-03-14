@@ -64,6 +64,68 @@ public class ScpClient
     }
   }
 
+
+
+  public async Task Upload(SshChannel channel, Stream source, string path, string serverFileName)
+  {
+
+    using var input = new PipeStream();
+
+    channel.DataReceived += delegate (object sender, Microsoft.DevTunnels.Ssh.Buffer buffer)
+    {
+      var bufferArray = buffer.ToArray();
+      input.Write(bufferArray, 0, bufferArray.Length);
+      input.Flush();
+    };
+
+    var commandAuthorized = await channel.RequestAsync(new CommandRequestMessage($"scp -t -d \"{path}\""));
+
+    CheckReturnCode(input);
+
+    await channel.SendAsync(System.Text.Encoding.UTF8.GetBytes(string.Format("C0644 {0} {1}\n", source.Length, serverFileName).ToCharArray()), default);
+
+    CheckReturnCode(input);
+
+    await UploadFileContent(channel, input, source, serverFileName);
+
+  }
+
+  private async Task UploadFileContent(SshChannel channel, Stream input, Stream source, string remoteFileName)
+  {
+    var totalLength = source.Length;
+    var BufferSize = 1024 * 16;
+    var buffer = new byte[BufferSize];
+
+    var read = source.Read(buffer, 0, buffer.Length);
+
+    long totalRead = 0;
+
+    while (read > 0)
+    {
+      await channel.SendAsync(buffer, default);
+
+      totalRead += read;
+
+      read = source.Read(buffer, 0, buffer.Length);
+    }
+
+    await channel.SendAsync(new byte[] { 0 }, default);
+    CheckReturnCode(input);
+  }
+
+
+  private void CheckReturnCode(Stream input)
+  {
+    var b = ReadByte(input);
+
+    if (b > 0)
+    {
+      var errorText = ReadString(input);
+
+      throw new Exception(errorText);
+    }
+  }
+
   public async Task<List<string>> ReadLines(SshChannel channel, string path)
   {
     using var output = new MemoryStream();
